@@ -1,35 +1,3 @@
-# WorkLens AI
-
-**WorkLens AI** is a Streamlit-powered AI workspace for understanding documents, turning meeting notes into clear next steps, and improving resume-to-job matches.
-
-It brings three practical tools into one interface:
-
-- **Document Chat** — upload a PDF and ask questions grounded in its contents.
-- **Meeting Insights** — turn raw meeting notes into summaries, action items, or answers to specific questions.
-- **Resume Match Analyzer** — compare a resume with a job description and receive an AI-generated match score, strengths, gaps, and suggested keywords.
-
-## Why WorkLens AI?
-
-Professional information is often trapped in long documents, rough notes, and job descriptions. WorkLens AI helps users turn that information into useful, actionable insights without switching between separate tools.
-
-## Features
-
-### Document Chat
-
-- Upload and preview a PDF in the browser.
-- Extract and split document text into overlapping chunks.
-- Store chunks in a temporary ChromaDB collection.
-- Retrieve the five most relevant chunks for each question.
-- Generate answers with Groq's `llama-3.3-70b-versatile` model using only retrieved document context.
-
-### Meeting Insights
-
-- Paste unstructured meeting notes.
-- Generate a concise three-bullet summary.
-- Extract action items and responsibilities.
-- Ask custom questions about the supplied notes.
-
-### Resume Match Analyzer
 
 - Upload a PDF resume and paste a job description.
 - Receive a resume-to-job match score out of 100.
@@ -94,3 +62,45 @@ streamlit run app.py
 Open the local address shown in the terminal, usually `http://localhost:8501`.
 
 ## How Document Chat Works
+
+1. The app extracts text from an uploaded PDF with PyPDF.
+2. It splits the text into approximately 500-character chunks with 50-character overlap.
+3. ChromaDB embeds and stores the chunks in an in-memory collection.
+4. For each user question, the app retrieves the five closest chunks.
+5. The retrieved context is sent to Groq with an instruction to answer only from that context.
+
+> The document collection is temporary and resets when a new PDF is uploaded or the app restarts.
+
+## Project Structure
+
+```text
+worklens-ai/
+├── app.py          # Streamlit application and all three tools
+├── .env            # Local API key; never commit this file
+├── .gitignore
+└── README.md
+```
+
+## Current Limitations
+
+- PDF retrieval data is stored only in memory and is not retained between sessions.
+- The application currently supports PDF files only.
+- Resume analysis is AI-generated guidance, not a guarantee of ATS or hiring outcomes.
+- Users should avoid uploading confidential documents unless they understand the privacy implications of sending content to the configured AI provider.
+
+## Roadmap
+
+- Persist document collections per user or workspace.
+- Show the source chunks used for each document answer.
+- Support DOCX and TXT uploads.
+- Add conversation history for document chat.
+- Add exportable meeting summaries and action-item lists.
+- Deploy the app with a secure server-side API-key configuration.
+
+## Author
+
+Built by [Ruben Krishnan](https://github.com/R7ben), an Applied AI student at UTM Kuala Lumpur.
+
+## License
+
+This is a personal learning project. Add a license before using or distributing it commercially.
