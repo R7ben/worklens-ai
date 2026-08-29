@@ -1,17 +1,49 @@
+# WorkLens AI
 
-- Upload a PDF resume and paste a job description.
-- Receive a resume-to-job match score out of 100.
-- Identify strengths, gaps, missing keywords, and tailored improvement suggestions.
-- Download the analysis as a text report.
+> An AI-powered productivity toolkit for chatting with PDFs, organizing meeting notes, and improving job applications.
+
+WorkLens AI brings together three practical AI tools in one simple Streamlit app:
+
+- **Chat with your PDF** — upload a document and ask questions about its content.
+- **Meeting Notes Assistant** — turn messy notes into summaries, action items, and answers.
+- **AI Resume Reviewer** — compare a resume with a job description and receive tailored feedback.
+
+## Features
+
+### 📄 Chat with your PDF
+
+- Upload a PDF document
+- Ask questions based on the document content
+- Uses Retrieval-Augmented Generation (RAG)
+- Retrieves relevant document sections before generating an answer
+
+### 📝 Meeting Notes Assistant
+
+- Summarize raw meeting notes into three clear bullet points
+- Extract action items and responsibilities
+- Ask custom questions about the meeting content
+
+### 💼 AI Resume Reviewer
+
+- Upload a PDF resume and paste a job description
+- Receive a resume-to-job match score out of 100
+- Identify matching strengths and missing skills
+- Find important keywords missing from the resume
+- Get actionable improvement suggestions
+- Download the result as a text report
 
 ## Tech Stack
 
-- **Frontend:** Streamlit
-- **LLM inference:** Groq API — `llama-3.3-70b-versatile`
-- **PDF processing:** PyPDF
-- **Retrieval:** ChromaDB
-- **Configuration:** python-dotenv
-- **Styling:** st_yled
+| Area | Technology |
+| --- | --- |
+| Frontend | Streamlit |
+| Language | Python |
+| LLM Inference | Groq API |
+| Model | `llama-3.3-70b-versatile` |
+| PDF Processing | PyPDF |
+| Retrieval | ChromaDB |
+| Environment Variables | python-dotenv |
+| Styling | st_yled |
 
 ## Getting Started
 
@@ -22,29 +54,37 @@
 
 ### Installation
 
-Clone the repository and enter it:
+Clone the repository:
 
 ```bash
 git clone https://github.com/R7ben/worklens-ai.git
 cd worklens-ai
 ```
 
-Create and activate a virtual environment:
+Create a virtual environment:
 
 ```bash
 python -m venv .venv
+```
 
-# Windows PowerShell
+Activate it.
+
+**Windows PowerShell**
+
+```powershell
 .venv\Scripts\Activate.ps1
+```
 
-# macOS / Linux
+**macOS / Linux**
+
+```bash
 source .venv/bin/activate
 ```
 
-Install the dependencies:
+Install dependencies:
 
 ```bash
-pip install streamlit st_yled pypdf chromadb python-dotenv groq
+pip install -r requirements.txt
 ```
 
 Create a `.env` file in the project root:
@@ -59,48 +99,59 @@ Run the application:
 streamlit run app.py
 ```
 
-Open the local address shown in the terminal, usually `http://localhost:8501`.
+Open the local URL shown in your terminal, usually:
 
-## How Document Chat Works
+```text
+http://localhost:8501
+```
 
-1. The app extracts text from an uploaded PDF with PyPDF.
-2. It splits the text into approximately 500-character chunks with 50-character overlap.
-3. ChromaDB embeds and stores the chunks in an in-memory collection.
-4. For each user question, the app retrieves the five closest chunks.
-5. The retrieved context is sent to Groq with an instruction to answer only from that context.
+## How PDF Chat Works
 
-> The document collection is temporary and resets when a new PDF is uploaded or the app restarts.
+1. Upload a PDF document.
+2. WorkLens extracts the text using PyPDF.
+3. The text is divided into overlapping chunks.
+4. ChromaDB finds the most relevant chunks for each question.
+5. Groq generates an answer using only the retrieved document context.
+
+> PDF data is temporary and resets when a new file is uploaded or the app restarts.
 
 ## Project Structure
 
 ```text
 worklens-ai/
-├── app.py          # Streamlit application and all three tools
-├── .env            # Local API key; never commit this file
+├── .devcontainer/          # Development container configuration
+├── .streamlit/             # Streamlit configuration
+├── app.py                  # Main Streamlit application
+├── requirements.txt        # Python dependencies
 ├── .gitignore
 └── README.md
 ```
 
+## Privacy Note
+
+PDFs, resumes, meeting notes, and job descriptions may be processed through the configured AI provider. Do not upload confidential or sensitive personal information unless you understand and accept this.
+
 ## Current Limitations
 
-- PDF retrieval data is stored only in memory and is not retained between sessions.
-- The application currently supports PDF files only.
-- Resume analysis is AI-generated guidance, not a guarantee of ATS or hiring outcomes.
-- Users should avoid uploading confidential documents unless they understand the privacy implications of sending content to the configured AI provider.
+- Supports PDF files only.
+- Scanned PDFs without selectable text may not work correctly.
+- Uploaded PDF data is not saved between sessions.
+- Resume feedback is AI-generated guidance and does not guarantee ATS or hiring outcomes.
 
 ## Roadmap
 
-- Persist document collections per user or workspace.
-- Show the source chunks used for each document answer.
-- Support DOCX and TXT uploads.
-- Add conversation history for document chat.
-- Add exportable meeting summaries and action-item lists.
-- Deploy the app with a secure server-side API-key configuration.
+- [ ] Support DOCX and TXT uploads
+- [ ] Show source chunks used for PDF answers
+- [ ] Add chat history
+- [ ] Export meeting summaries and action items
+- [ ] Add persistent user workspaces
+- [ ] Deploy with secure server-side API key management
+- [ ] Add tests and GitHub Actions CI
 
 ## Author
 
-Built by [Ruben Krishnan](https://github.com/R7ben), an Applied AI student at UTM Kuala Lumpur.
+Built by [Sapttaruben Krishnan](https://github.com/R7ben), an Applied AI student at UTM Kuala Lumpur.
 
 ## License
 
-This is a personal learning project. Add a license before using or distributing it commercially.
+This is currently a personal learning project. Add a license before commercial use or distribution.
